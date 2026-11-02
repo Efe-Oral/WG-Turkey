@@ -13,7 +13,7 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  `img-src 'self' data: blob: ${supabaseUrl}`.trim(),
+  `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org ${supabaseUrl}`.trim(),
   "font-src 'self'",
   `connect-src 'self' ${supabaseUrl} ${supabaseWs}${isDev ? " ws:" : ""}`.trim(),
   "frame-ancestors 'none'",
@@ -37,6 +37,18 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: supabaseUrl
+      ? [
+          {
+            protocol: "https",
+            hostname: new URL(supabaseUrl).hostname,
+            pathname: "/storage/v1/object/public/**",
+          },
+        ]
+      : [],
+    minimumCacheTTL: 2_678_400,
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

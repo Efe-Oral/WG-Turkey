@@ -18,7 +18,7 @@ const SECTION_TITLES = [
 
 // Next.js prefetches these header links, but their pages arrive in later
 // phases. Remove each one as its page ships.
-const UNBUILT_ROUTES = ["/ilanlar", "/guvenlik", "/ilan-ver"];
+const UNBUILT_ROUTES = ["/guvenlik", "/ilan-ver"];
 
 async function expectNoHorizontalScroll(page: Page) {
   const overflow = await page.evaluate(
