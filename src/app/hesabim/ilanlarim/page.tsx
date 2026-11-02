@@ -86,7 +86,9 @@ export default async function MyListingsPage({ searchParams }: PageProps) {
                       {listing.title || t("status.draft")}
                     </Link>
                   </h3>
-                  <ListingActions listing={listing} />
+                  <div className="shrink-0">
+                    <ListingActions listing={listing} />
+                  </div>
                 </div>
                 <span className="w-fit rounded-pill bg-black/4 px-2 py-0.5 text-small font-medium">
                   {t(`status.${listing.status}`)}

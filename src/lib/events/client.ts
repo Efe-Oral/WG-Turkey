@@ -102,8 +102,22 @@ function flush(): void {
   }
 }
 
+declare global {
+  interface Window {
+    plausible?: (name: string) => void;
+    umami?: { track: (name: string) => void };
+  }
+}
+
 export function track(event: ClientEvent): void {
   queue.push(event);
+
+  // Web analytics counts page views by itself, so only key actions go there.
+  if (event.name !== "page_view") {
+    window.plausible?.(event.name);
+    window.umami?.track(event.name);
+  }
+
   timer ??= setTimeout(flush, FLUSH_MS);
 
   window.addEventListener("pagehide", flush, { once: true });

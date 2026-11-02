@@ -49,6 +49,7 @@ export function LocationPicker({
 
       const pin = L.marker(start ? [start.lat, start.lng] : DEFAULT_CENTER, {
         draggable: true,
+        title: label,
         autoPan: true,
         icon: L.divIcon({
           className: "",
@@ -78,7 +79,7 @@ export function LocationPicker({
       map.current?.remove();
       map.current = undefined;
     };
-  }, []);
+  }, [label]);
 
   // Choosing a district moves the map there, until the user has placed a pin.
   useEffect(() => {

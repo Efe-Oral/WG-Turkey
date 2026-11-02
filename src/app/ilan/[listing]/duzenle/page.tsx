@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { LoginGate } from "@/components/auth/LoginGate";
 import { ListingForm } from "@/components/form/ListingForm";
 import { getViewer } from "@/lib/auth/viewer";
+import { isPhoneVerificationEnabled } from "@/lib/features";
 import { getProvinces } from "@/lib/geo";
 import { getEditableListing } from "@/lib/listings/form-data";
 import { parseListingParam } from "@/lib/listings/urls";
@@ -40,6 +41,7 @@ export default async function EditListingPage({ params }: PageProps) {
       initialPhotos={listing.photos}
       listingId={listing.id}
       isLive={listing.status !== "draft"}
+      showPhoneOption={isPhoneVerificationEnabled()}
     />
   );
 }

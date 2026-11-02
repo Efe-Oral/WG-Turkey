@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
 import {
   CATEGORIES,
@@ -119,7 +120,27 @@ export type SearchResult = {
   priceRange: { min: number; max: number } | null;
 };
 
-export async function searchListings(
+/** Metadata and page ask for the same search, so one request runs it once. */
+const searchOnce = cache(
+  (key: string): Promise<SearchResult> => {
+    const { provinceId, districtIds, filters } = JSON.parse(key) as {
+      provinceId: string;
+      districtIds: string[];
+      filters: SearchFilters;
+    };
+    return runSearch(provinceId, districtIds, filters);
+  },
+);
+
+export function searchListings(
+  provinceId: string,
+  districtIds: string[],
+  filters: SearchFilters,
+): Promise<SearchResult> {
+  return searchOnce(JSON.stringify({ provinceId, districtIds, filters }));
+}
+
+async function runSearch(
   provinceId: string,
   districtIds: string[],
   filters: SearchFilters,
@@ -209,9 +230,9 @@ export async function searchListings(
 }
 
 /** Whether a province has any active listing at all, for the noindex rule. */
-export async function countProvinceListings(
+export const countProvinceListings = cache(async (
   provinceId: string,
-): Promise<number> {
+): Promise<number> => {
   const { count } = await createPublicClient()
     .from("public_listings")
     .select("id", { count: "exact", head: true })
@@ -219,7 +240,7 @@ export async function countProvinceListings(
     .eq("province_id", provinceId);
 
   return count ?? 0;
-}
+});
 
 export async function findByPublicNumber(
   publicNumber: number,

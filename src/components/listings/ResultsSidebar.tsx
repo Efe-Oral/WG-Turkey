@@ -2,6 +2,7 @@ import { Bell } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
+import { FavoritesCard } from "./FavoritesCard";
 import { NumberSearch } from "./NumberSearch";
 
 type ResultsSidebarProps = {
@@ -15,10 +16,7 @@ export function ResultsSidebar({ cities, currentCity }: ResultsSidebarProps) {
   return (
     <aside className="flex flex-col gap-3 md:w-60 md:shrink-0">
       <Card className="p-3">
-        <h2 className="text-body font-semibold">{t("favorites")}</h2>
-        <Link href="/hesabim/favoriler" className="mt-1 inline-block text-meta">
-          {t("favoritesLink")}
-        </Link>
+        <FavoritesCard />
       </Card>
 
       <Card className="p-3">

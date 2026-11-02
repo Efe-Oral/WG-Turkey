@@ -175,6 +175,7 @@ test.describe("listing detail page", () => {
     await expect(page.getByRole("tab", { name: "Oda" })).toBeVisible();
 
     const map = page.getByTestId("listing-map");
+    await map.scrollIntoViewIfNeeded();
     await expect(map.locator("path.leaflet-interactive")).toHaveCount(1);
     await expect(map.locator(".leaflet-marker-icon")).toHaveCount(0);
     await expect(map.getByRole("link", { name: "OpenStreetMap" })).toBeVisible();
@@ -207,7 +208,8 @@ test.describe("listing detail page", () => {
   test("has no axe violations", async ({ page }) => {
     const listing = await firstListing();
     await page.goto(`/ilan/${listing.public_number}-${listing.slug}`);
-    await expect(page.getByTestId("listing-map")).toBeVisible();
+    await page.getByTestId("listing-map").scrollIntoViewIfNeeded();
+    await expect(page.locator(".leaflet-container")).toBeVisible();
 
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);

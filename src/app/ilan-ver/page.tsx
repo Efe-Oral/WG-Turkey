@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { LoginGate } from "@/components/auth/LoginGate";
 import { ListingForm } from "@/components/form/ListingForm";
 import { getViewer } from "@/lib/auth/viewer";
+import { isPhoneVerificationEnabled } from "@/lib/features";
 import { getProvinces } from "@/lib/geo";
 import { EMPTY_FORM } from "@/lib/listings/schema";
 
@@ -26,6 +27,7 @@ export default async function PostListingPage() {
       initialPhotos={[]}
       listingId={null}
       isLive={false}
+      showPhoneOption={isPhoneVerificationEnabled()}
     />
   );
 }

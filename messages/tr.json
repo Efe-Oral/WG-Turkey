@@ -800,7 +800,8 @@
       "retention7": "7 gün geri dönüş",
       "retention30": "30 gün geri dönüş",
       "boostClicks": "Öne çıkar tıklamaları",
-      "boostListers": "Tekil ilan sahibi"
+      "boostListers": "Tekil ilan sahibi",
+      "messagesPerDay": "Günlük mesaj"
     },
     "table": {
       "topDistricts": "İlçelere göre aktif ilan",
@@ -884,6 +885,52 @@
     "unboost": "Öne çıkarmayı kaldır",
     "listingsOf": "İlanları",
     "failed": "İşlem yapılamadı."
+  },
+  "legal": {
+    "draftNote": "TASLAK: Hukuki inceleme gerekli",
+    "termsTitle": "Kullanım Şartları",
+    "termsText": "Bu metin taslaktır. Kullanım şartlarının son hali yakında burada yayınlanacak.",
+    "kvkkTitle": "KVKK Aydınlatma Metni",
+    "kvkkText": "Bu metin taslaktır. Kişisel verilerin işlenmesine dair aydınlatma metninin son hali yakında burada yayınlanacak.",
+    "privacyTitle": "Gizlilik Politikası",
+    "privacyText": "Bu metin taslaktır. Gizlilik politikasının son hali yakında burada yayınlanacak.",
+    "cookiesTitle": "Çerez Politikası",
+    "cookiesText": "Bu metin taslaktır. Giriş oturumu için gerekli çerezler ve son aranan şehri hatırlayan bir çerez kullanıyoruz. Reklam çerezi kullanmıyoruz.",
+    "aboutTitle": "Hakkımızda",
+    "aboutText": "EvArkadaşıAra, Türkiye'de ev arkadaşı, kiralık oda ve stüdyo arayanları doğrudan buluşturan ücretsiz bir ilan sitesidir.",
+    "contactTitle": "İletişim",
+    "contactText": "Soru, öneri ve geri bildirimlerin için iletişim adresimiz yakında burada olacak."
+  },
+  "safetyPage": {
+    "metaTitle": "Güvenlik ipuçları | EvArkadaşıAra",
+    "title": "Güvenlik ipuçları",
+    "intro": "Ev ararken ve ilan verirken dikkat etmen gerekenler.",
+    "sections": [
+      {
+        "title": "Kapora ve ön ödeme",
+        "text": "Evi görmeden asla kapora veya depozito gönderme. Ev sahibi şehir dışındaysa ve anahtarı kargoyla göndermeyi teklif ediyorsa dikkat et. Ödeme yapmadan önce evi yerinde gör, kiralayan kişiyle yüz yüze görüş."
+      },
+      {
+        "title": "Güvenli iletişim",
+        "text": "Mümkün olduğunca site içi mesajlaşmayı kullan. Dolandırıcılar konuşmayı hızlıca WhatsApp'a veya e-postaya taşımak ister. Site içinde kalan mesajlar, bir sorun olduğunda bize bildirebileceğin kayıtlardır."
+      },
+      {
+        "title": "Kişisel bilgiler",
+        "text": "Kimlik fotokopisi veya belgelerini ev görmeden paylaşma. Banka bilgilerini ve doğrulama kodlarını kimseye verme."
+      },
+      {
+        "title": "Piyasanın çok altındaki fiyatlar",
+        "text": "Kira, bölgedeki benzer evlerin çok altındaysa dikkatli ol. Çok uygun bir fiyat, seni hızlı karar vermeye zorlamak için kullanılabilir."
+      },
+      {
+        "title": "Sahte ilan nasıl anlaşılır",
+        "text": "Fotoğraflar internetten alınmış gibi görünüyorsa, ilan sahibi evi göstermek istemiyorsa, acele ettiriyorsa ya da yurt dışında olduğunu söylüyorsa şüphelen. Fotoğrafları görsel arama ile kontrol edebilirsin."
+      },
+      {
+        "title": "Bize bildir",
+        "text": "Şüpheli ilan veya mesajları 'Şikayet et' ile bildir. Her şikayeti inceliyoruz."
+      }
+    ]
   },
   "devUi": {
     "metaTitle": "Tasarım sistemi",

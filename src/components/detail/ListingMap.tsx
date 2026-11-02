@@ -21,8 +21,9 @@ export function ListingMap({ lat, lng, label }: ListingMapProps) {
     let map: import("leaflet").Map | undefined;
     let cancelled = false;
 
-    // Leaflet touches window on import, so it loads in the browser only.
-    void import("leaflet").then(({ default: L }) => {
+    const start = async () => {
+      // Leaflet touches window on import, so it loads in the browser only.
+      const { default: L } = await import("leaflet");
       if (cancelled || !container.current) return;
 
       map = L.map(container.current, { scrollWheelZoom: false }).setView(
@@ -41,10 +42,23 @@ export function ListingMap({ lat, lng, label }: ListingMapProps) {
         fillColor: CYAN,
         fillOpacity: 0.35,
       }).addTo(map);
-    });
+    };
+
+    // The map sits far down the page, so it waits until it is nearly in view.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          observer.disconnect();
+          void start();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    if (container.current) observer.observe(container.current);
 
     return () => {
       cancelled = true;
+      observer.disconnect();
       map?.remove();
     };
   }, [lat, lng]);

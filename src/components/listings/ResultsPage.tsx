@@ -102,7 +102,7 @@ export async function buildResultsMetadata(
   const isDistrict = filters.districts.length === 1;
   const districtIds = await resolveDistrictIds(province.id, filters.districts);
   const [result, provinceTotal] = await Promise.all([
-    searchListings(province.id, districtIds, { ...filters, page: 1 }),
+    searchListings(province.id, districtIds, filters),
     countProvinceListings(province.id),
   ]);
 

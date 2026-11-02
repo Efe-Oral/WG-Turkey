@@ -6,17 +6,20 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const isDev = process.env.NODE_ENV !== "production";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseWs = supabaseUrl.replace(/^https:/, "wss:");
+const analyticsOrigin = process.env.NEXT_PUBLIC_ANALYTICS_SCRIPT_URL
+  ? new URL(process.env.NEXT_PUBLIC_ANALYTICS_SCRIPT_URL).origin
+  : "";
 
 // Static CSP, as section 6.4 asks for headers in next.config. Next.js inline
 // bootstrap scripts need 'unsafe-inline' unless a nonce is issued per request.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com ${analyticsOrigin}${isDev ? " 'unsafe-eval'" : ""}`,
   "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org ${supabaseUrl}`.trim(),
   "font-src 'self'",
-  `connect-src 'self' ${supabaseUrl} ${supabaseWs}${isDev ? " ws:" : ""}`.trim(),
+  `connect-src 'self' ${supabaseUrl} ${supabaseWs} ${analyticsOrigin}${isDev ? " ws:" : ""}`.trim(),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

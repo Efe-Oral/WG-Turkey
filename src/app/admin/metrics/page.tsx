@@ -280,7 +280,7 @@ export default async function MetricsPage({ searchParams }: PageProps) {
           <KpiCard label={t("kpi.rented14")} value={`${show(tables.rented_within_14d_rate)}%`} />
         </KpiGrid>
         <Card className="grid gap-6 p-4 md:grid-cols-2">
-          <MetricChart title={t("metrics")} data={toSeries(series, "messages")} />
+          <MetricChart title={t("kpi.messagesPerDay")} data={toSeries(series, "messages")} />
           <DataTable
             title={t("table.deleteReasons")}
             fileName="silme-sebepleri"

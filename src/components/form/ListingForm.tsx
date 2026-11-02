@@ -159,6 +159,8 @@ type ListingFormProps = {
   initialPhotos: UploadedPhoto[];
   listingId: string | null;
   isLive: boolean;
+  /** Without verification, anyone could publish a stranger's number. */
+  showPhoneOption: boolean;
 };
 
 export function ListingForm({
@@ -168,6 +170,7 @@ export function ListingForm({
   initialPhotos,
   listingId: initialListingId,
   isLive,
+  showPhoneOption,
 }: ListingFormProps) {
   const t = useTranslations("form");
   const enums = useTranslations("enums");
@@ -917,17 +920,19 @@ export function ListingForm({
         </Section>
 
         <Section id="iletisim" title={t("sectionContact")}>
-          <Controller
-            control={control}
-            name="show_phone"
-            render={({ field }) => (
-              <Toggle
-                label={t("showPhone")}
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-            )}
-          />
+          {showPhoneOption ? (
+            <Controller
+              control={control}
+              name="show_phone"
+              render={({ field }) => (
+                <Toggle
+                  label={t("showPhone")}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+          ) : null}
           <p className="mt-2 text-meta text-black/60">{t("contactNote")}</p>
         </Section>
 
