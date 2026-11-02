@@ -3,9 +3,13 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
+import { AuthProvider, type ClientViewer } from "@/components/auth/AuthProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { getViewer, isOnboarded } from "@/lib/auth/viewer";
+import { createClient } from "@/lib/supabase/server";
 import { locale } from "@/i18n/request";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,31 +22,54 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: t("title"),
     description: t("description"),
   };
 }
 
+async function getFavoriteIds(): Promise<string[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("favorites").select("listing_id");
+  return (data ?? []).map((row) => row.listing_id);
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const common = await getTranslations("common");
+  const [common, viewer] = await Promise.all([
+    getTranslations("common"),
+    getViewer(),
+  ]);
+
+  const clientViewer: ClientViewer | null = viewer
+    ? {
+        id: viewer.id,
+        name: viewer.profile.first_name,
+        isAdmin: viewer.profile.role === "admin",
+        onboarded: isOnboarded(viewer),
+      }
+    : null;
+
+  const favoriteIds = viewer ? await getFavoriteIds() : [];
 
   return (
     <html lang={locale} className={inter.variable}>
       <body className="flex min-h-dvh flex-col">
         <NextIntlClientProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-3 focus:py-2"
-          >
-            {common("skipToContent")}
-          </a>
-          <Header />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <Footer />
+          <AuthProvider viewer={clientViewer} favoriteIds={favoriteIds}>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-3 focus:py-2"
+            >
+              {common("skipToContent")}
+            </a>
+            <Header unreadCount={0} />
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

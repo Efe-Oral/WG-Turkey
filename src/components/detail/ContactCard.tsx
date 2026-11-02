@@ -1,18 +1,22 @@
-import { BadgeCheck, Flag, Printer } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
-import { FavoriteButton } from "@/components/listings/FavoriteButton";
 import { formatMonthYear } from "@/lib/format";
 import type { ListingDetail } from "@/lib/listings/types";
+import { ContactActions } from "./ContactActions";
 
 type ContactCardProps = {
   listing: ListingDetail;
-  showVerified: boolean;
+  phoneFeatureEnabled: boolean;
+  initialNote: string | null;
 };
 
-export function ContactCard({ listing, showVerified }: ContactCardProps) {
+export function ContactCard({
+  listing,
+  phoneFeatureEnabled,
+  initialNote,
+}: ContactCardProps) {
   const t = useTranslations("detail");
   const card = useTranslations("card");
   const name = listing.owner_name ?? card("anonymous");
@@ -27,7 +31,7 @@ export function ContactCard({ listing, showVerified }: ContactCardProps) {
             {t("memberSince", { date: formatMonthYear(listing.owner_member_since) })}
           </p>
           <p className="text-meta text-black/60">{card(listing.owner_account_type)}</p>
-          {listing.owner_phone_verified && showVerified ? (
+          {listing.owner_phone_verified && phoneFeatureEnabled ? (
             <p className="inline-flex items-center gap-1 text-meta">
               <BadgeCheck aria-hidden="true" size={14} />
               {card("verified")}
@@ -36,25 +40,12 @@ export function ContactCard({ listing, showVerified }: ContactCardProps) {
         </div>
       </div>
 
-      <FavoriteButton listingId={listing.id} />
-
-      <Link
-        href={`/mesaj/yeni?ilan=${listing.public_number}`}
-        className="inline-flex h-11 items-center justify-center rounded-pill bg-cyan px-6 font-bold hover:no-underline hover:brightness-[.94]"
-      >
-        {t("message")}
-      </Link>
-
-      <div className="flex flex-wrap justify-center gap-x-4 text-meta">
-        <span className="inline-flex items-center gap-1 py-1">
-          <Flag aria-hidden="true" size={14} />
-          {t("report")}
-        </span>
-        <span className="inline-flex items-center gap-1 py-1">
-          <Printer aria-hidden="true" size={14} />
-          {t("print")}
-        </span>
-      </div>
+      <ContactActions
+        listingId={listing.id}
+        publicNumber={listing.public_number}
+        initialNote={initialNote}
+        showPhoneButton={phoneFeatureEnabled && listing.show_phone}
+      />
     </Card>
   );
 }

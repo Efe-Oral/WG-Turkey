@@ -9,10 +9,12 @@ import { Gallery } from "@/components/detail/Gallery";
 import { buildFeatureItems } from "@/components/detail/listing-facts";
 import { ListingMap } from "@/components/detail/ListingMap";
 import { ResultNavigation } from "@/components/detail/ResultNavigation";
+import { StickyContactBar } from "@/components/detail/StickyContactBar";
 import { Breadcrumb } from "@/components/listings/Breadcrumb";
 import { ListingCard } from "@/components/listings/ListingCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Card } from "@/components/ui/Card";
+import { getViewer } from "@/lib/auth/viewer";
 import { isPhoneVerificationEnabled } from "@/lib/features";
 import {
   formatArea,
@@ -30,6 +32,7 @@ import {
   parseListingParam,
   photoUrl,
 } from "@/lib/listings/detail";
+import { getPendingListing, getViewerExtras } from "@/lib/listings/owner-view";
 import type { ListingDetail } from "@/lib/listings/types";
 import { absoluteUrl } from "@/lib/site";
 import { locative } from "@/lib/turkish";
@@ -38,9 +41,16 @@ type PageProps = { params: Promise<{ listing: string }> };
 
 async function loadListing(param: string): Promise<ListingDetail> {
   const publicNumber = parseListingParam(param);
-  const listing = publicNumber ? await getListing(publicNumber) : null;
-  if (!listing) notFound();
-  return listing;
+  if (!publicNumber) notFound();
+
+  const listing = await getListing(publicNumber);
+  if (listing) return listing;
+
+  const viewer = await getViewer();
+  const pending = viewer ? await getPendingListing(publicNumber, viewer) : null;
+  if (!pending) notFound();
+
+  return pending;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -102,10 +112,11 @@ export default async function ListingPage({ params }: PageProps) {
     permanentRedirect(listingPath(listing));
   }
 
-  const [t, enums, breadcrumb, photos, similar, districts] = await Promise.all([
+  const [t, enums, breadcrumb, viewer, photos, similar, districts] = await Promise.all([
     getTranslations("detail"),
     getTranslations("enums"),
     getTranslations("breadcrumb"),
+    getViewer(),
     getListingPhotos(listing.id),
     getSimilarListings(listing),
     getDistrictsWithListings(listing.province_id),
@@ -119,7 +130,9 @@ export default async function ListingPage({ params }: PageProps) {
     { label: listing.title },
   ];
 
-  if (listing.status !== "active") {
+  const isPending = (listing.status as string) === "pending_review";
+
+  if (listing.status !== "active" && !isPending) {
     return (
       <div className="mx-auto max-w-page px-4 py-8 md:px-6">
         <h1 className="text-h1 font-semibold">{t("unavailable")}</h1>
@@ -143,16 +156,21 @@ export default async function ListingPage({ params }: PageProps) {
     );
   }
 
+  const extras = viewer
+    ? await getViewerExtras(listing.id)
+    : { descriptions: null, note: null };
+  const text = extras.descriptions ?? listing;
+
   const isRoom = listing.category === "room";
   const notSpecified = t("notSpecified");
   const money = (value: number | null) =>
     value === null ? notSpecified : formatCurrency(value);
 
   const tabs = [
-    { value: "room", label: t("tabRoom"), text: listing.desc_room },
-    { value: "location", label: t("tabLocation"), text: listing.desc_location },
-    { value: "household", label: t("tabHousehold"), text: listing.desc_household },
-    { value: "other", label: t("tabOther"), text: listing.desc_other },
+    { value: "room", label: t("tabRoom"), text: text.desc_room },
+    { value: "location", label: t("tabLocation"), text: text.desc_location },
+    { value: "household", label: t("tabHousehold"), text: text.desc_household },
+    { value: "other", label: t("tabOther"), text: text.desc_other },
   ].filter((tab): tab is { value: string; label: string; text: string } =>
     Boolean(tab.text?.trim()),
   );
@@ -217,9 +235,14 @@ export default async function ListingPage({ params }: PageProps) {
   ].filter((line) => line !== null);
 
   const features = buildFeatureItems(listing, t, enums);
+  const [card, preview] = await Promise.all([
+    getTranslations("card"),
+    getTranslations("preview"),
+  ]);
   const place = locative(listing.district_name);
   const provincePlace = locative(listing.province_name);
-  const showVerified = isPhoneVerificationEnabled();
+  const phoneFeatureEnabled = isPhoneVerificationEnabled();
+  const hasMaskedText = !viewer && tabs.some((tab) => tab.text.includes("•••"));
 
   return (
     <div className="mx-auto max-w-page px-4 py-4 md:px-6">
@@ -248,10 +271,27 @@ export default async function ListingPage({ params }: PageProps) {
         }}
       />
 
+      {isPending ? (
+        <p role="status" className="mb-4 rounded-card bg-cyan px-4 py-3 font-medium">
+          {preview("pendingBanner")}
+        </p>
+      ) : null}
+
+      <StickyContactBar
+        listingId={listing.id}
+        publicNumber={listing.public_number}
+        ownerName={listing.owner_name ?? card("anonymous")}
+        ownerType={card(listing.owner_account_type)}
+      />
+
       <div className="flex flex-col-reverse gap-6 md:flex-row">
         <aside className="md:w-[300px] md:shrink-0">
           <div className="md:sticky md:top-4">
-            <ContactCard listing={listing} showVerified={showVerified} />
+            <ContactCard
+              listing={listing}
+              phoneFeatureEnabled={phoneFeatureEnabled}
+              initialNote={extras.note}
+            />
           </div>
         </aside>
 
@@ -327,6 +367,9 @@ export default async function ListingPage({ params }: PageProps) {
           {tabs.length > 0 ? (
             <Card className="p-4">
               <DescriptionTabs label={t("tabsLabel")} tabs={tabs} />
+              {hasMaskedText ? (
+                <p className="text-meta text-black/60">{t("maskedNote")}</p>
+              ) : null}
             </Card>
           ) : null}
 

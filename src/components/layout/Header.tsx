@@ -1,13 +1,14 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { AccountMenu } from "./AccountMenu";
 import { Logo } from "./Logo";
 
-export function Header() {
+export function Header({ unreadCount }: { unreadCount: number }) {
   const t = useTranslations("header");
   const common = useTranslations("common");
 
   return (
-    <header className="border-b border-black/12 bg-white">
+    <header className="border-b border-black/12 bg-white print:hidden">
       <div className="mx-auto flex min-h-16 max-w-page flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2 md:px-6">
         <Link
           href="/"
@@ -35,13 +36,7 @@ export function Header() {
             </li>
           </ul>
         </nav>
-        {/* Becomes the auth modal and account menu in Phase 2. */}
-        <button
-          type="button"
-          className="ml-auto cursor-pointer py-1 font-medium hover:underline"
-        >
-          {t("account")}
-        </button>
+        <AccountMenu unreadCount={unreadCount} />
       </div>
     </header>
   );

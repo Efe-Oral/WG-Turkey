@@ -1,11 +1,11 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { GONE_AFTER_DAYS } from "@/lib/listings/constants";
-import { parseListingParam } from "@/lib/listings/detail";
 
 const DAY_MS = 86_400_000;
+const GONE_AFTER_DAYS = 30;
 
 /** A page render cannot answer 410, so old paused and rented listings stop here. */
-async function isGone(publicNumber: number): Promise<boolean> {
+async function isGone(publicNumber: string): Promise<boolean> {
   const url = new URL(
     `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/public_listings`,
   );
@@ -33,9 +33,42 @@ async function isGone(publicNumber: number): Promise<boolean> {
   );
 }
 
+/** Keeps the login alive. Visitors with no session cost no network call. */
+async function refreshSession(request: NextRequest): Promise<NextResponse> {
+  let response = NextResponse.next({ request });
+
+  const hasSession = request.cookies
+    .getAll()
+    .some((cookie) => cookie.name.startsWith("sb-"));
+  if (!hasSession) return response;
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(cookiesToSet) {
+          for (const { name, value } of cookiesToSet) {
+            request.cookies.set(name, value);
+          }
+          response = NextResponse.next({ request });
+          for (const { name, value, options } of cookiesToSet) {
+            response.cookies.set(name, value, options);
+          }
+        },
+      },
+    },
+  );
+
+  await supabase.auth.getUser();
+  return response;
+}
+
 export async function proxy(request: NextRequest) {
-  const param = /^\/ilan\/([^/]+)$/.exec(request.nextUrl.pathname)?.[1];
-  const publicNumber = param ? parseListingParam(param) : null;
+  const publicNumber = /^\/ilan\/(\d{1,15})(?:-[^/]*)?$/.exec(
+    request.nextUrl.pathname,
+  )?.[1];
 
   if (publicNumber && (await isGone(publicNumber))) {
     return new NextResponse("Bu ilan artık yayında değil.", {
@@ -44,9 +77,9 @@ export async function proxy(request: NextRequest) {
     });
   }
 
-  return NextResponse.next();
+  return refreshSession(request);
 }
 
 export const config = {
-  matcher: ["/ilan/:path*"],
+  matcher: ["/((?!_next/static|_next/image|icon.svg|robots.txt|sitemap.xml).*)"],
 };
