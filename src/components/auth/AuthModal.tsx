@@ -16,6 +16,7 @@ import { track } from "@/lib/events/client";
 import { createClient } from "@/lib/supabase/client";
 
 const RESEND_SECONDS = 60;
+const TOO_MANY_REQUESTS = 429;
 const emailSchema = z.email();
 
 const onboardingSchema = z.object({
@@ -107,7 +108,11 @@ export function AuthModal({
 
     if (verifyError || !data.user) {
       setBusy(false);
-      setError(t("invalidCode"));
+      setError(
+        verifyError?.status === TOO_MANY_REQUESTS
+          ? t("tooManyAttempts")
+          : t("invalidCode"),
+      );
       return;
     }
 

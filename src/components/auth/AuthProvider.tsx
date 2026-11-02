@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -11,7 +12,12 @@ import {
   type ReactNode,
 } from "react";
 import { toggleFavorite as toggleFavoriteAction } from "@/lib/listings/engagement";
-import { AuthModal } from "./AuthModal";
+
+// The form and its validation only load when someone opens the modal.
+const AuthModal = dynamic(
+  () => import("./AuthModal").then((module) => module.AuthModal),
+  { ssr: false },
+);
 
 export type ClientViewer = {
   id: string;
@@ -102,12 +108,14 @@ export function AuthProvider({
   return (
     <AuthContext.Provider value={value}>
       {children}
-      <AuthModal
-        open={open}
-        onOpenChange={setOpen}
-        onDone={onDone}
-        needsOnboarding={viewer !== null && !viewer.onboarded}
-      />
+      {open ? (
+        <AuthModal
+          open={open}
+          onOpenChange={setOpen}
+          onDone={onDone}
+          needsOnboarding={viewer !== null && !viewer.onboarded}
+        />
+      ) : null}
     </AuthContext.Provider>
   );
 }

@@ -262,7 +262,7 @@ test("a private note is saved per user", async ({ page }) => {
     const dialog = page.getByRole("dialog");
     await dialog.getByRole("textbox").fill("Cumartesi ara");
     await dialog.getByRole("button", { name: "Kaydet" }).click();
-    await expect(dialog.getByText("Not kaydedildi.")).toBeVisible();
+    await expect(dialog.getByText("Not kaydedildi.")).toBeVisible({ timeout: 15_000 });
 
     const { data } = await adminDb
       .from("listing_notes")

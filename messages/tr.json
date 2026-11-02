@@ -337,7 +337,8 @@
     "noteSave": "Kaydet",
     "shareTitle": "Paylaş",
     "phoneFailed": "Telefon numarası gösterilemedi.",
-    "stickyLabel": "Hızlı işlemler"
+    "stickyLabel": "Hızlı işlemler",
+    "noteFailed": "Not kaydedilemedi. Tekrar dene."
   },
   "home": {
     "searchTitle": "Türkiye'de ev arkadaşı, oda ve stüdyo ilanları",
@@ -391,7 +392,8 @@
     "consentRequired": "Devam etmek için onay vermelisin.",
     "saveFailed": "Kaydedilemedi. Tekrar dene.",
     "finish": "Tamamla",
-    "login": "Giriş yap"
+    "login": "Giriş yap",
+    "tooManyAttempts": "Çok fazla deneme yapıldı. Birkaç dakika sonra tekrar dene."
   },
   "form": {
     "loginRequired": "İlan vermek için giriş yapmalısın.",

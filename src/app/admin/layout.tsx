@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { FullMessages } from "@/components/layout/FullMessages";
 import { getViewer } from "@/lib/auth/viewer";
 
 export const metadata: Metadata = { robots: { index: false } };
@@ -34,7 +35,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           ))}
         </ul>
       </nav>
-      {children}
+      <FullMessages>{children}</FullMessages>
     </div>
   );
 }

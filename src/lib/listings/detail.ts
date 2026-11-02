@@ -1,8 +1,14 @@
 import { cache } from "react";
-import { createPublicClient } from "@/lib/supabase/public";
+import {
+  createCachedPublicClient,
+  createPublicClient,
+} from "@/lib/supabase/public";
 import type { ListingDetail, ListingPhoto, ListingSummary } from "./types";
 
 export { listingPath, parseListingParam, photoUrl } from "./urls";
+
+/** Link lists and reply times can lag slightly, which saves two round trips. */
+const SIDE_DATA_SECONDS = 120;
 
 export const getListing = cache(
   async (publicNumber: number): Promise<ListingDetail | null> => {
@@ -35,7 +41,7 @@ export async function getListingPhotos(
 export async function getSimilarListings(
   listing: Pick<ListingDetail, "id" | "province_id" | "district_id" | "category">,
 ): Promise<ListingSummary[]> {
-  const { data } = await createPublicClient()
+  const { data } = await createCachedPublicClient(SIDE_DATA_SECONDS)
     .from("public_listings")
     .select("*")
     .eq("status", "active")
@@ -52,7 +58,7 @@ export async function getSimilarListings(
 export async function getDistrictsWithListings(
   provinceId: string,
 ): Promise<{ name: string; slug: string }[]> {
-  const { data } = await createPublicClient()
+  const { data } = await createCachedPublicClient(SIDE_DATA_SECONDS)
     .from("public_listings")
     .select("district_name, district_slug")
     .eq("status", "active")
@@ -70,9 +76,10 @@ export async function getDistrictsWithListings(
 export async function getOwnerResponseMinutes(
   ownerId: string,
 ): Promise<number | null> {
-  const { data } = await createPublicClient().rpc("get_owner_response_minutes", {
-    p_owner_id: ownerId,
-  });
+  const { data } = await createCachedPublicClient(SIDE_DATA_SECONDS).rpc(
+    "get_owner_response_minutes",
+    { p_owner_id: ownerId },
+  );
 
   return data ?? null;
 }

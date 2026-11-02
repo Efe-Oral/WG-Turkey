@@ -49,6 +49,7 @@ export function Gallery({ listingId, title, photos }: GalleryProps) {
           alt={t("photoAlt", { title, index: index + 1 })}
           fill
           priority
+          quality={60}
           sizes="(min-width: 768px) 820px, 100vw"
           className="object-cover"
         />

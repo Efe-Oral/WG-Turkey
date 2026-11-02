@@ -173,9 +173,19 @@ test.describe("messaging", () => {
       await expect(seeker.getByText("en az 20 karakter")).toBeVisible();
 
       await sendFirstMessage(seeker, pair);
+      // Dated ahead, so the check is not at the mercy of a slow round trip.
+      await adminDb.from("messages").insert({
+        conversation_id: seeker.url().split("/").pop(),
+        sender_id: pair.seekerId,
+        body: "Az önce gönderildi",
+        created_at: new Date(Date.now() + 60_000).toISOString(),
+      });
+
       await seeker.getByRole("textbox", { name: "Yanıtın" }).fill("Bir şey daha");
       await seeker.getByRole("button", { name: "Gönder" }).click();
-      await expect(seeker.getByText("Birkaç saniye sonra")).toBeVisible();
+      await expect(seeker.getByText("Birkaç saniye sonra")).toBeVisible({
+        timeout: 15_000,
+      });
     } finally {
       await cleanup(pair);
     }

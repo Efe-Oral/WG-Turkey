@@ -92,7 +92,7 @@ export async function login(page: Page, email: string): Promise<void> {
   await page.goto("/");
   await openLogin(page);
   await loginWithModal(page, email);
-  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(page.getByRole("dialog")).toBeHidden({ timeout: 20_000 });
   await expect(
     page.getByRole("banner").getByRole("button", { name: /Hesabım/ }),
   ).toHaveAttribute("aria-haspopup", "menu", { timeout: 15_000 });

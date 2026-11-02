@@ -8,6 +8,8 @@ async function firstListing() {
     .select("public_number, slug, lat, lng, building_no, public_lat, public_lng")
     .eq("status", "active")
     .eq("category", "room")
+    .not("public_lat", "is", null)
+    .not("household_size", "is", null)
     .limit(1)
     .single();
 
@@ -260,7 +262,7 @@ test.describe("privacy", () => {
     const table = await request.get(`${base}/listings?select=building_no`, {
       headers,
     });
-    expect(await table.json()).toEqual([]);
+    expect(table.status()).toBe(401);
   });
 });
 

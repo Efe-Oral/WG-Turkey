@@ -14,8 +14,8 @@ export function createPublicClient() {
   );
 }
 
-/** Same client, cached for a day. Only for data that rarely changes. */
-export function createCachedPublicClient() {
+/** Same client with a shared cache. Only for data that may lag a little. */
+export function createCachedPublicClient(revalidateSeconds = DAY_IN_SECONDS) {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -23,7 +23,7 @@ export function createCachedPublicClient() {
       auth: { persistSession: false, autoRefreshToken: false },
       global: {
         fetch: (input, init) =>
-          fetch(input, { ...init, next: { revalidate: DAY_IN_SECONDS } }),
+          fetch(input, { ...init, next: { revalidate: revalidateSeconds } }),
       },
     },
   );

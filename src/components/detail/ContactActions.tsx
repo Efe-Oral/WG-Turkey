@@ -131,7 +131,7 @@ export function ContactActions({
           <Button
             onClick={() => {
               void saveNote(listingId, note).then(({ ok }) =>
-                setNoteStatus(ok ? t("noteSaved") : undefined),
+                setNoteStatus(ok ? t("noteSaved") : t("noteFailed")),
               );
             }}
           >

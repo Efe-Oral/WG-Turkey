@@ -159,11 +159,12 @@ export default async function ListingPage({ params }: PageProps) {
     );
   }
 
-  const responseMinutes = await getOwnerResponseMinutes(listing.owner_id);
-
-  const extras = viewer
-    ? await getViewerExtras(listing.id)
-    : { descriptions: null, note: null };
+  const [responseMinutes, extras] = await Promise.all([
+    getOwnerResponseMinutes(listing.owner_id),
+    viewer
+      ? getViewerExtras(listing.id)
+      : Promise.resolve({ descriptions: null, note: null }),
+  ]);
   const text = extras.descriptions ?? listing;
 
   const isRoom = listing.category === "room";

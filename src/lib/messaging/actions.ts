@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getActiveViewer, type Viewer } from "@/lib/auth/viewer";
 import { sendEmail } from "@/lib/email/send";
@@ -174,10 +175,14 @@ const composeSchema = z.object({
   turnstileToken: z.string().optional(),
 });
 
-/** Opens a conversation about a listing, or continues the existing one. */
+/**
+ * Opens a conversation about a listing, or continues the existing one. Success
+ * redirects from here: a separate client navigation could be cancelled by the
+ * refresh that revalidation triggers.
+ */
 export async function sendFirstMessage(
   input: z.infer<typeof composeSchema>,
-): Promise<SendResult> {
+): Promise<{ ok: false; error: SendError }> {
   const parsed = composeSchema.safeParse(input);
   const viewer = await getActiveViewer();
   if (!viewer || !parsed.success) return { ok: false, error: "auth" };
@@ -250,7 +255,7 @@ export async function sendFirstMessage(
 
   revalidatePath("/mesajlar");
 
-  return { ok: true, conversationId: conversation.id };
+  redirect(`/mesajlar/${conversation.id}`);
 }
 
 const replySchema = z.object({

@@ -4,6 +4,7 @@ const PORT = 3100;
 
 export default defineConfig({
   testDir: "./tests/smoke",
+  globalSetup: "./tests/helpers/global-setup.ts",
   fullyParallel: true,
   // The free database tier slows sharply with more parallel browsers.
   workers: 2,

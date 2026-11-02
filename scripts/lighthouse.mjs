@@ -41,11 +41,6 @@ try {
 
     const lcp = result.lhr.audits["largest-contentful-paint"];
     console.log(`${formFactor} LCP: ${lcp.displayValue}`);
-    if (process.env.LH_DEBUG) {
-      const d = result.lhr.audits["lcp-breakdown-insight"]?.details?.items ?? result.lhr.audits["largest-contentful-paint-element"]?.details?.items;
-      console.log(JSON.stringify(d)?.slice(0, 900));
-      console.log("TBT", result.lhr.audits["total-blocking-time"].displayValue, "FCP", result.lhr.audits["first-contentful-paint"].displayValue, "SI", result.lhr.audits["speed-index"].displayValue);
-    }
 
     for (const ref of result.lhr.categories.accessibility.auditRefs) {
       const audit = result.lhr.audits[ref.id];

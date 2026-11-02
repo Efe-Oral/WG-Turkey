@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { PageViewTracker } from "@/components/analytics/Trackers";
@@ -31,6 +31,19 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// Client components on public pages. Everything else stays on the server, which
+// keeps the text out of each page's HTML.
+const PUBLIC_CLIENT_NAMESPACES = [
+  "common",
+  "header",
+  "auth",
+  "search",
+  "enums",
+  "card",
+  "detail",
+  "report",
+] as const;
+
 async function getFavoriteIds(): Promise<string[]> {
   const supabase = await createClient();
   const { data } = await supabase.from("favorites").select("listing_id");
@@ -40,10 +53,15 @@ async function getFavoriteIds(): Promise<string[]> {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
-  const [common, viewer] = await Promise.all([
+  const [common, viewer, messages] = await Promise.all([
     getTranslations("common"),
     getViewer(),
+    getMessages(),
   ]);
+
+  const publicMessages = Object.fromEntries(
+    PUBLIC_CLIENT_NAMESPACES.map((name) => [name, messages[name]]),
+  );
 
   const clientViewer: ClientViewer | null = viewer
     ? {
@@ -61,7 +79,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={inter.variable}>
       <body className="flex min-h-dvh flex-col">
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={publicMessages}>
           <AuthProvider viewer={clientViewer} favoriteIds={favoriteIds}>
             <a
               href="#main"

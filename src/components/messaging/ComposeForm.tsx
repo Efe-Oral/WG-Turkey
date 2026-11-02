@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Turnstile } from "@/components/ui/Turnstile";
@@ -27,7 +26,6 @@ export function ComposeForm({
 }: ComposeFormProps) {
   const t = useTranslations("compose");
   const errors = useTranslations("messageErrors");
-  const router = useRouter();
 
   const [body, setBody] = useState("");
   const [error, setError] = useState<SendError>();
@@ -49,9 +47,9 @@ export function ComposeForm({
     });
     setBusy(false);
 
-    if (result.ok) router.push(`/mesajlar/${result.conversationId}`);
-    else if (result.error === "safety") setShowSafety(true);
-    else setError(result.error);
+    // Success redirects on the server, so only failures come back here.
+    if (result?.error === "safety") setShowSafety(true);
+    else if (result) setError(result.error);
   };
 
   const onSubmit = () => {

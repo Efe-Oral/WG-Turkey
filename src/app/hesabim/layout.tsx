@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { AccountLayout } from "@/components/account/AccountLayout";
 import { LoginGate } from "@/components/auth/LoginGate";
+import { FullMessages } from "@/components/layout/FullMessages";
 import { getViewer } from "@/lib/auth/viewer";
 
 export const metadata: Metadata = { robots: { index: false } };
@@ -12,5 +13,9 @@ export default async function Layout({ children }: { children: ReactNode }) {
 
   if (!viewer) return <LoginGate message={t("loginRequired")} />;
 
-  return <AccountLayout>{children}</AccountLayout>;
+  return (
+    <FullMessages>
+      <AccountLayout>{children}</AccountLayout>
+    </FullMessages>
+  );
 }

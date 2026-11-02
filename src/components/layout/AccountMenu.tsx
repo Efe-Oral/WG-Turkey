@@ -8,7 +8,6 @@ import { DropdownMenu } from "radix-ui";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { UNREAD_CHANGED_EVENT } from "@/lib/messaging/rules";
-import { createClient } from "@/lib/supabase/client";
 
 type AccountMenuProps = {
   unreadCount: number;
@@ -36,10 +35,12 @@ export function AccountMenu({ unreadCount: serverCount }: AccountMenuProps) {
   useEffect(() => {
     if (!viewerId) return;
 
-    const supabase = createClient();
+    let removeChannel: (() => void) | undefined;
+    let cancelled = false;
 
     const updateCount = async () => {
-      const { data } = await supabase
+      const { createClient } = await import("@/lib/supabase/client");
+      const { data } = await createClient()
         .from("conversations")
         .select("lister_id, lister_unread, seeker_unread");
 
@@ -57,18 +58,27 @@ export function AccountMenu({ unreadCount: serverCount }: AccountMenuProps) {
     const onChanged = () => void updateCount();
     window.addEventListener(UNREAD_CHANGED_EVENT, onChanged);
 
-    const channel = supabase
-      .channel("unread-count")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "conversations" },
-        () => void updateCount(),
-      )
-      .subscribe();
+    // Loaded on demand: logged-out visitors never need the client library.
+    void import("@/lib/supabase/client").then(({ createClient }) => {
+      if (cancelled) return;
+
+      const supabase = createClient();
+      const channel = supabase
+        .channel("unread-count")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "conversations" },
+          () => void updateCount(),
+        )
+        .subscribe();
+
+      removeChannel = () => void supabase.removeChannel(channel);
+    });
 
     return () => {
+      cancelled = true;
       window.removeEventListener(UNREAD_CHANGED_EVENT, onChanged);
-      void supabase.removeChannel(channel);
+      removeChannel?.();
     };
   }, [viewerId]);
 
@@ -125,12 +135,11 @@ export function AccountMenu({ unreadCount: serverCount }: AccountMenuProps) {
           <DropdownMenu.Item
             className={itemClasses}
             onSelect={() => {
-              void createClient()
-                .auth.signOut()
-                .then(() => {
-                  router.push("/");
-                  router.refresh();
-                });
+              void import("@/lib/supabase/client").then(async ({ createClient }) => {
+                await createClient().auth.signOut();
+                router.push("/");
+                router.refresh();
+              });
             }}
           >
             {t("signOut")}

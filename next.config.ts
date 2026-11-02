@@ -41,6 +41,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  experimental: {
+    optimizePackageImports: ["radix-ui", "lucide-react"],
+  },
   images: {
     remotePatterns: supabaseUrl
       ? [
@@ -52,6 +55,8 @@ const nextConfig: NextConfig = {
         ]
       : [],
     minimumCacheTTL: 2_678_400,
+    qualities: [60, 75],
+    deviceSizes: [384, 640, 828, 1080, 1600],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
