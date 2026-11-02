@@ -43,11 +43,11 @@ export function MultiSelect({
   };
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger
-        aria-label={`${label}: ${summary || placeholder}`}
         className={clsx(triggerClasses, className)}
       >
+        <span className="sr-only">{label}: </span>
         <span className={clsx("truncate", !summary && "text-black/60")}>
           {summary || placeholder}
         </span>

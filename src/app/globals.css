@@ -77,3 +77,11 @@
   outline-offset: 2px;
   box-shadow: 0 0 0 2px var(--color-cyan);
 }
+
+/* Popover panels take focus when they open. The highlighted row shows the
+   position, so the panel itself keeps its normal shadow. */
+[role="menu"]:focus-visible,
+[role="listbox"]:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-float);
+}
