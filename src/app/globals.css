@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/* Design tokens from section 3 of the brief. Tailwind's default palette is
+   removed, so a colour outside the brief cannot be used by accident. */
+@theme {
+  --color-*: initial;
+  --color-cyan: #35e5fd;
+  --color-graphite: #484848;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-error: #c62828;
+  --color-valid: #2e7d32;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --text-body: 15px;
+  --text-body--line-height: 1.5;
+  --text-meta: 13px;
+  --text-meta--line-height: 1.4;
+  --text-small: 12px;
+  --text-small--line-height: 1.4;
+  --text-h1: 26px;
+  --text-h1--line-height: 1.25;
+  --text-h2: 20px;
+  --text-h2--line-height: 1.3;
+  --text-h3: 17px;
+  --text-h3--line-height: 1.35;
+  --text-price: 18px;
+  --text-price--line-height: 1.3;
+
+  --radius-input: 4px;
+  --radius-card: 6px;
+  --radius-modal: 16px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 8%);
+  --shadow-float: 0 4px 16px rgb(0 0 0 / 12%);
+
+  --container-page: 1200px;
+}
+
+@layer base {
+  html {
+    color: var(--color-black);
+    background: var(--color-white);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  a {
+    color: inherit;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-cyan);
+  }
+}
+
+/* Cyan alone is 1.52:1 on white, so it carries a thin black outline. Unlayered
+   on purpose: it must beat the shadow utilities on buttons and cards. */
+:focus-visible {
+  outline: 1px solid var(--color-black);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--color-cyan);
+}
