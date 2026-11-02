@@ -143,7 +143,7 @@ Latest results:
 | Check | Result |
 | :--- | :--- |
 | Lint and type-check | Pass |
-| Playwright smoke tests | 96 tests |
+| Playwright smoke tests | 97 of 97 passing |
 | Accessibility (Lighthouse) | 100 on homepage, results and detail |
 | Mobile performance (Lighthouse) | Homepage 97, results 97, detail 86 |
 | Results page LCP on mobile | 1.0 s |

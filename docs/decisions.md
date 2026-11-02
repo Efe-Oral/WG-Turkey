@@ -19,7 +19,7 @@
 - **Date filters mean "covers my stay".** Müsaitlik başlangıcı finds listings free by that date. Müsaitlik bitişi finds listings still free on that date, or open-ended.
 - **Editing a live listing has no autosave.** Changes apply on "Kaydet", and moderation runs again, so a scam text can send it back to review.
 - **A rejected listing returns to draft,** with the reason stored and emailed to the owner.
-- **Three open reports pause a listing.** The owner can resume it once fewer than three remain open.
+- **Three open reports pause a listing.** The owner can resume it once fewer than three remain open. A person can hold only one open report per listing, so three reports always means three accounts.
 
 ## Navigation
 

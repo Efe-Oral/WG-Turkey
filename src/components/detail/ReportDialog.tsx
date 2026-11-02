@@ -33,19 +33,24 @@ export function ReportDialog({ target, iconOnly = false }: ReportDialogProps) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<ReportInput["reason"]>();
   const [details, setDetails] = useState("");
-  const [state, setState] = useState<"idle" | "sent" | "failed">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "failed">("idle");
 
   const submit = async () => {
     if (!reason) return;
 
-    const { ok } = await createReport({
-      listingId: target.listingId ?? null,
-      messageId: target.messageId ?? null,
-      userId: target.userId ?? null,
-      reason,
-      details,
-    });
-    setState(ok ? "sent" : "failed");
+    setState("sending");
+    try {
+      const { ok } = await createReport({
+        listingId: target.listingId ?? null,
+        messageId: target.messageId ?? null,
+        userId: target.userId ?? null,
+        reason,
+        details,
+      });
+      setState(ok ? "sent" : "failed");
+    } catch {
+      setState("failed");
+    }
   };
 
   return (
@@ -101,7 +106,10 @@ export function ReportDialog({ target, iconOnly = false }: ReportDialogProps) {
                 {t("failed")}
               </p>
             ) : null}
-            <Button disabled={!reason} onClick={() => void submit()}>
+            <Button
+              disabled={!reason || state === "sending"}
+              onClick={() => void submit()}
+            >
               {t("send")}
             </Button>
           </div>

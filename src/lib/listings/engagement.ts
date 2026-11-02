@@ -110,6 +110,8 @@ export async function revealPhone(
   return { phone: owner.phone };
 }
 
+const UNIQUE_VIOLATION = "23505";
+
 const reportSchema = z.object({
   listingId: z.uuid().nullable(),
   messageId: z.uuid().nullable(),
@@ -145,6 +147,8 @@ export async function createReport(input: ReportInput): Promise<{ ok: boolean }>
     reason,
     details: details || null,
   });
+  // A repeat changes nothing: the first report is still open.
+  if (error?.code === UNIQUE_VIOLATION) return { ok: true };
   if (error) return { ok: false };
 
   await logEvent({

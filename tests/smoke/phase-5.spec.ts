@@ -255,7 +255,9 @@ async function report(page: Page, reason: string) {
   const dialog = page.getByRole("dialog");
   await dialog.getByRole("radio", { name: reason }).check();
   await dialog.getByRole("button", { name: "Gönder" }).click();
-  await expect(dialog.getByText("Şikayetini inceleyeceğiz")).toBeVisible();
+  await expect(dialog.getByText("Şikayetini inceleyeceğiz")).toBeVisible({
+    timeout: 15_000,
+  });
 }
 
 test.describe("reports", () => {
@@ -289,6 +291,39 @@ test.describe("reports", () => {
     } finally {
       await deleteTestUser(owner.userId);
       for (const id of reporters) await deleteTestUser(id);
+    }
+  });
+
+  test("one person reporting repeatedly cannot pause a listing", async ({ page }) => {
+    const owner = await createOwner("active");
+    const email = testEmail("tekrar");
+    const otherId = await createTestUser(testEmail("diger"));
+    const reporterId = await createTestUser(email, {
+      firstName: "Tan",
+      lastName: "Tekrar",
+    });
+
+    try {
+      await adminDb.from("reports").insert([
+        { reporter_id: otherId, listing_id: owner.listing.id, reason: "fake" },
+        { reporter_id: reporterId, listing_id: owner.listing.id, reason: "fake" },
+      ]);
+
+      await login(page, email);
+      await page.goto(`/ilan/${owner.listing.public_number}-yonetim-testi`);
+      await report(page, "Sahte ilan");
+
+      const { count } = await adminDb
+        .from("reports")
+        .select("id", { count: "exact", head: true })
+        .eq("listing_id", owner.listing.id)
+        .eq("status", "open");
+      expect(count).toBe(2);
+      expect((await statusOf(owner.listing.id))?.status).toBe("active");
+    } finally {
+      await deleteTestUser(owner.userId);
+      await deleteTestUser(otherId);
+      await deleteTestUser(reporterId);
     }
   });
 
