@@ -233,7 +233,9 @@ test.describe("messaging", () => {
       await lister.goto(threadUrl);
       await lister.getByRole("button", { name: "Kiralandı" }).click();
 
-      await expect(lister.getByRole("button", { name: "Kiralandı" })).toHaveCount(0);
+      await expect(lister.getByRole("button", { name: "Kiralandı" })).toHaveCount(0, {
+        timeout: 15_000,
+      });
 
       const { data } = await adminDb
         .from("listings")

@@ -598,6 +598,156 @@
     "scamWarning": "Evi görmeden ödeme yapma.",
     "peerGone": "Bu kullanıcı hesabını sildi. Yanıt gönderilemez."
   },
+  "account": {
+    "loginRequired": "Hesabını görmek için giriş yapmalısın.",
+    "menuLabel": "Hesap menüsü",
+    "messages": "Mesajlar",
+    "listings": "İlanlarım",
+    "live": "Yayında",
+    "drafts": "Taslaklar",
+    "inactive": "Pasif",
+    "favorites": "Favoriler",
+    "profile": "Profil",
+    "myProfile": "Profilim",
+    "about": "Hakkımda",
+    "settings": "Ayarlar",
+    "login": "Giriş bilgileri",
+    "privacy": "Gizlilik",
+    "deleteAccount": "Hesabı sil",
+    "templates": "Mesaj şablonlarım"
+  },
+  "myListings": {
+    "title": "İlanlarım",
+    "newListing": "Yeni ilan ver",
+    "liveHeading": "{count} yayında ilan",
+    "draftHeading": "{count} taslak",
+    "inactiveHeading": "{count} pasif ilan",
+    "empty": "Burada henüz ilan yok.",
+    "location": "{city} · {street} | İlan no: {number}",
+    "locationNoStreet": "{city} | İlan no: {number}",
+    "updated": "Son güncelleme: {updated} (Oluşturma: {created})",
+    "statsMessages": "Son 30 günde mesaj:",
+    "statsVisitors": "Ziyaretçi:",
+    "statsQuality": "Kalite puanı",
+    "status": {
+      "active": "Yayında",
+      "pending_review": "İncelemede",
+      "paused": "Duraklatıldı",
+      "rented": "Kiralandı",
+      "draft": "Taslak"
+    },
+    "menu": "İlan seçenekleri",
+    "edit": "Düzenle",
+    "pause": "Duraklat",
+    "resume": "Yayına al",
+    "markRented": "Kiralandı olarak işaretle",
+    "boost": "Öne çıkar (yakında)",
+    "delete": "Sil",
+    "boostToast": "Bu özellik yakında geliyor. İlgin için teşekkürler.",
+    "actionFailed": "İşlem yapılamadı.",
+    "perPage": "Sayfa başına ilan: {count}",
+    "rentedTitle": "Kiralandı olarak işaretle",
+    "rentedQuestion": "Ev arkadaşını EvArkadaşıAra üzerinden mi buldun?",
+    "rentedYes": "Evet",
+    "rentedNo": "Hayır",
+    "rentedElsewhere": "Başka bir yerden",
+    "rentedConversation": "Hangi konuşma? (isteğe bağlı)",
+    "rentedConversationNone": "Seçme",
+    "rentedSave": "Kaydet",
+    "deleteTitle": "İlanı sil",
+    "deleteQuestion": "Neden siliyorsun?",
+    "deleteConfirm": "Sil",
+    "reasons": {
+      "rented_here": "Kiraladım (bu site)",
+      "rented_elsewhere": "Kiraladım (başka yerden)",
+      "changed_mind": "Vazgeçtim",
+      "other": "Diğer"
+    }
+  },
+  "profile": {
+    "title": "Profilim",
+    "photo": "Profil fotoğrafı",
+    "photoEdit": "Düzenle",
+    "photoFailed": "Fotoğraf yüklenemedi.",
+    "firstName": "Ad",
+    "lastName": "Soyadı",
+    "displayName": "Görünen ad",
+    "gender": "Cinsiyet",
+    "genderFemale": "Kadın",
+    "genderMale": "Erkek",
+    "genderUnspecified": "Belirtmek istemiyorum",
+    "birthYear": "Doğum yılı",
+    "status": "Durum",
+    "statusStudent": "Öğrenci",
+    "statusEmployed": "Çalışan",
+    "statusOther": "Diğer",
+    "field": "Alan/Meslek",
+    "contactTitle": "İletişim",
+    "phone": "Telefon",
+    "phoneVerified": "Doğrulanmış",
+    "save": "Kaydet",
+    "saved": "Kaydedildi.",
+    "saveFailed": "Kaydedilemedi.",
+    "select": "Seç",
+    "fields": {
+      "engineering": "Mühendislik",
+      "health": "Sağlık",
+      "education": "Eğitim",
+      "law": "Hukuk",
+      "business": "İşletme ve ekonomi",
+      "social": "Sosyal bilimler",
+      "art": "Sanat ve tasarım",
+      "it": "Bilişim",
+      "service": "Hizmet sektörü",
+      "other": "Diğer"
+    }
+  },
+  "aboutPage": {
+    "title": "Hakkımda",
+    "label": "Kendini tanıt",
+    "help": "Mesaj gönderdiğin ilan sahipleri bu metni görür.",
+    "save": "Kaydet"
+  },
+  "settingsPage": {
+    "title": "Ayarlar",
+    "emailNotifications": "Yeni mesajlarda e-posta al"
+  },
+  "loginPage": {
+    "title": "Giriş bilgileri",
+    "email": "E-posta",
+    "method": "Şifre kullanmıyoruz. Her girişte e-postana bir kod gönderilir."
+  },
+  "privacyPage": {
+    "title": "Gizlilik",
+    "text": "Kişisel verilerinin nasıl işlendiğini aşağıdaki metinlerden okuyabilirsin.",
+    "kvkk": "KVKK Aydınlatma Metni",
+    "privacy": "Gizlilik Politikası",
+    "consent": "KVKK onayı: {date}"
+  },
+  "deletePage": {
+    "title": "Hesabı sil",
+    "warning": "Hesabın ve tüm kişisel verilerin silinir. İlanların kaldırılır. Mesajlaştığın kişiler seni \"Silinmiş kullanıcı\" olarak görür. Bu işlem geri alınamaz.",
+    "confirmLabel": "Onaylamak için SİL yaz",
+    "confirmWord": "SİL",
+    "button": "Hesabımı sil",
+    "failed": "Hesap silinemedi. Tekrar dene."
+  },
+  "templatesPage": {
+    "title": "Mesaj şablonlarım",
+    "empty": "Henüz şablonun yok. Mesaj yazarken \"Şablon olarak kaydet\" ile ekleyebilirsin.",
+    "delete": "Sil"
+  },
+  "favoritesPage": {
+    "title": "Favoriler",
+    "empty": "Henüz favori ilanın yok.",
+    "browse": "İlanları gör"
+  },
+  "renew": {
+    "title": "İlanın yayında kaldı",
+    "text": "30 gün daha yayında.",
+    "failed": "Bu bağlantı geçersiz veya süresi dolmuş.",
+    "myListings": "İlanlarıma git"
+  },
   "devUi": {
     "metaTitle": "Tasarım sistemi",
     "title": "Tasarım sistemi",
