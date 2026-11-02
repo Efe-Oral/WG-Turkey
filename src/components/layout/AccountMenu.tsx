@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DropdownMenu } from "radix-ui";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { UNREAD_CHANGED_EVENT } from "@/lib/messaging/rules";
 import { createClient } from "@/lib/supabase/client";
 
 type AccountMenuProps = {
@@ -15,10 +17,60 @@ type AccountMenuProps = {
 const itemClasses =
   "block cursor-pointer rounded-input px-3 py-2 font-normal outline-none data-highlighted:bg-black/4 hover:no-underline";
 
-export function AccountMenu({ unreadCount }: AccountMenuProps) {
+export function AccountMenu({ unreadCount: serverCount }: AccountMenuProps) {
   const t = useTranslations("header");
   const router = useRouter();
   const { viewer, requireAuth } = useAuth();
+  const viewerId = viewer?.id;
+
+  const [unreadCount, setUnreadCount] = useState(serverCount);
+  const [lastServerCount, setLastServerCount] = useState(serverCount);
+  if (serverCount !== lastServerCount) {
+    setLastServerCount(serverCount);
+    setUnreadCount(serverCount);
+  }
+
+  // Row Level Security limits these events to the viewer's own conversations.
+  // The count is read directly: a full page refresh here would race with, and
+  // cancel, any navigation in progress.
+  useEffect(() => {
+    if (!viewerId) return;
+
+    const supabase = createClient();
+
+    const updateCount = async () => {
+      const { data } = await supabase
+        .from("conversations")
+        .select("lister_id, lister_unread, seeker_unread");
+
+      setUnreadCount(
+        (data ?? []).reduce(
+          (total, row) =>
+            total +
+            (row.lister_id === viewerId ? row.lister_unread : row.seeker_unread),
+          0,
+        ),
+      );
+    };
+
+    // A thread can be marked read before this channel finishes subscribing.
+    const onChanged = () => void updateCount();
+    window.addEventListener(UNREAD_CHANGED_EVENT, onChanged);
+
+    const channel = supabase
+      .channel("unread-count")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "conversations" },
+        () => void updateCount(),
+      )
+      .subscribe();
+
+    return () => {
+      window.removeEventListener(UNREAD_CHANGED_EVENT, onChanged);
+      void supabase.removeChannel(channel);
+    };
+  }, [viewerId]);
 
   const badge =
     unreadCount > 0 ? (

@@ -21,12 +21,14 @@ import {
   formatCurrency,
   formatDate,
   formatDuration,
+  formatResponseTime,
 } from "@/lib/format";
 import { CATEGORIES, CATEGORY_SLUGS } from "@/lib/listings/constants";
 import {
   getDistrictsWithListings,
   getListing,
   getListingPhotos,
+  getOwnerResponseMinutes,
   getSimilarListings,
   listingPath,
   parseListingParam,
@@ -155,6 +157,8 @@ export default async function ListingPage({ params }: PageProps) {
       </div>
     );
   }
+
+  const responseMinutes = await getOwnerResponseMinutes(listing.owner_id);
 
   const extras = viewer
     ? await getViewerExtras(listing.id)
@@ -339,6 +343,11 @@ export default async function ListingPage({ params }: PageProps) {
               <CostRow label={t("otherCosts")} value={money(listing.other_costs)} />
               <CostRow label={t("deposit")} value={money(listing.deposit)} />
             </dl>
+            {responseMinutes !== null ? (
+              <p className="mt-2 text-meta text-black/60">
+                {t("responseTime", { time: formatResponseTime(responseMinutes) })}
+              </p>
+            ) : null}
           </Card>
 
           <div className="grid gap-4 sm:grid-cols-2">

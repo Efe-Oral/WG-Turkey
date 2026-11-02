@@ -65,3 +65,14 @@ export async function getDistrictsWithListings(
 
   return [...unique.entries()].map(([slug, name]) => ({ name, slug }));
 }
+
+/** Median reply time, or null when there is too little data to be fair. */
+export async function getOwnerResponseMinutes(
+  ownerId: string,
+): Promise<number | null> {
+  const { data } = await createPublicClient().rpc("get_owner_response_minutes", {
+    p_owner_id: ownerId,
+  });
+
+  return data ?? null;
+}

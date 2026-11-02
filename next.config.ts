@@ -11,7 +11,8 @@ const supabaseWs = supabaseUrl.replace(/^https:/, "wss:");
 // bootstrap scripts need 'unsafe-inline' unless a nonce is issued per request.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""}`,
+  "frame-src https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: https://tile.openstreetmap.org https://*.tile.openstreetmap.org ${supabaseUrl}`.trim(),
   "font-src 'self'",

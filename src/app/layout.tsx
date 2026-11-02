@@ -7,6 +7,7 @@ import { AuthProvider, type ClientViewer } from "@/components/auth/AuthProvider"
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { getViewer, isOnboarded } from "@/lib/auth/viewer";
+import { getUnreadCount } from "@/lib/messaging/queries";
 import { createClient } from "@/lib/supabase/server";
 import { locale } from "@/i18n/request";
 import { SITE_URL } from "@/lib/site";
@@ -51,7 +52,9 @@ export default async function RootLayout({
       }
     : null;
 
-  const favoriteIds = viewer ? await getFavoriteIds() : [];
+  const [favoriteIds, unreadCount] = viewer
+    ? await Promise.all([getFavoriteIds(), getUnreadCount(viewer.id)])
+    : [[], 0];
 
   return (
     <html lang={locale} className={inter.variable}>
@@ -64,7 +67,7 @@ export default async function RootLayout({
             >
               {common("skipToContent")}
             </a>
-            <Header unreadCount={0} />
+            <Header unreadCount={unreadCount} />
             <main id="main" className="flex-1">
               {children}
             </main>

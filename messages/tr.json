@@ -532,6 +532,72 @@
       "other": "Diğer"
     }
   },
+  "compose": {
+    "title": "Mesaj gönder",
+    "label": "Mesajın:",
+    "send": "Gönder",
+    "saveTemplate": "Şablon olarak kaydet",
+    "templateSaved": "Şablon kaydedildi.",
+    "templateFailed": "Şablon kaydedilemedi.",
+    "templatePicker": "Şablon",
+    "templateChoose": "Şablon seç",
+    "viewListing": "İlana git",
+    "loginRequired": "Mesaj göndermek için giriş yapmalısın.",
+    "ownListing": "Kendi ilanına mesaj gönderemezsin."
+  },
+  "messageErrors": {
+    "auth": "Mesaj göndermek için giriş yapmalısın.",
+    "too_short": "Mesajın en az 20 karakter olmalı.",
+    "too_long": "Mesajın en fazla 3000 karakter olabilir.",
+    "too_fast": "Biraz yavaş. Birkaç saniye sonra tekrar dene.",
+    "too_many_conversations": "Bugün için yeni mesaj sınırına ulaştın.",
+    "unavailable": "Bu ilan artık mesaj almıyor.",
+    "own_listing": "Kendi ilanına mesaj gönderemezsin.",
+    "safety": "Önce güvenlik ipuçlarını okumalısın.",
+    "bot": "Güvenlik kontrolü başarısız. Sayfayı yenileyip tekrar dene.",
+    "failed": "Mesaj gönderilemedi. Tekrar dene."
+  },
+  "safety": {
+    "modalTitle": "Önemli güvenlik ipuçları",
+    "depositTitle": "Kapora ve ön ödeme:",
+    "depositText": "Evi görmeden asla kapora veya depozito gönderme. Ev sahibi şehir dışındaysa ve anahtarı kargoyla göndermeyi teklif ediyorsa dikkat et.",
+    "chatTitle": "Güvenli iletişim:",
+    "chatText": "Mümkün olduğunca site içi mesajlaşmayı kullan. Dolandırıcılar konuşmayı hızlıca WhatsApp'a veya e-postaya taşımak ister.",
+    "personalTitle": "Kişisel bilgiler:",
+    "personalText": "Kimlik fotokopisi veya belgelerini ev görmeden paylaşma.",
+    "reportTitle": "Bize bildir:",
+    "reportText": "Şüpheli ilan veya mesajları 'Şikayet et' ile bildir.",
+    "confirm": "Güvenlik ipuçlarını okudum",
+    "more": "Güvenlik hakkında daha fazla bilgi"
+  },
+  "inbox": {
+    "title": "Mesajlar",
+    "loginRequired": "Mesajlarını görmek için giriş yapmalısın.",
+    "filter": "Mesaj filtresi",
+    "filterAll": "Tüm mesajlar",
+    "filterUnread": "Okunmamış",
+    "filterArchived": "Arşiv",
+    "empty": "Burada henüz mesaj yok.",
+    "me": "Ben",
+    "deletedUser": "Silinmiş kullanıcı",
+    "listingGone": "İlan kaldırılmış",
+    "archive": "Arşivle",
+    "unarchive": "Arşivden çıkar",
+    "select": "{name} ile konuşmayı seç",
+    "safetyTitle": "Güvenli ara ve ilan ver",
+    "safetyText": "Evi görmeden ödeme yapma, kimlik belgelerini paylaşma. Şüpheli bir durum görürsen bize bildir.",
+    "safetyLink": "Güvenlik ipuçları"
+  },
+  "thread": {
+    "title": "Mesaj",
+    "back": "Mesajlara dön",
+    "reply": "Yanıtın",
+    "send": "Gönder",
+    "about": "Hakkında",
+    "markRented": "Kiralandı",
+    "scamWarning": "Evi görmeden ödeme yapma.",
+    "peerGone": "Bu kullanıcı hesabını sildi. Yanıt gönderilemez."
+  },
   "devUi": {
     "metaTitle": "Tasarım sistemi",
     "title": "Tasarım sistemi",

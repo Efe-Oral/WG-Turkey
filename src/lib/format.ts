@@ -86,6 +86,13 @@ export function formatDuration(
   return relative.replace(" önce", "");
 }
 
+/** "45 dakika", "3 saat", "2 gün". */
+export function formatResponseTime(minutes: number): string {
+  if (minutes < 60) return `${Math.max(1, Math.round(minutes))} dakika`;
+  if (minutes < 1440) return `${Math.round(minutes / 60)} saat`;
+  return `${Math.round(minutes / 1440)} gün`;
+}
+
 /** Uppercases with Turkish rules, so "kira" becomes "KİRA", not "KIRA". */
 export function toTurkishUpperCase(text: string): string {
   return text.toLocaleUpperCase(LOCALE);
