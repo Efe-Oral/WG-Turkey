@@ -1,0 +1,37 @@
+# Reference screenshots contain real people's personal data. Never commit them.
+docs/reference/
+
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Build and test output
+build/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Environment and secrets. Only the documented example file is tracked.
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+supabase/.temp/
+supabase/.branches/
+
+# Logs
+*.log
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
