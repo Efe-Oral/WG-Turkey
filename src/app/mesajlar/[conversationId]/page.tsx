@@ -50,9 +50,12 @@ export default async function ThreadPage({ params }: PageProps) {
 
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-h1 font-semibold">{peerName}</h1>
-        <Link href="/mesajlar" className="text-meta">
-          {t("back")}
-        </Link>
+        <div className="flex items-center gap-4 text-meta">
+          {thread.peer.id ? (
+            <ReportDialog target={{ userId: thread.peer.id }} />
+          ) : null}
+          <Link href="/mesajlar">{t("back")}</Link>
+        </div>
       </div>
 
       {listing ? (

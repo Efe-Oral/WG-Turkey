@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
+import { PageViewTracker } from "@/components/analytics/Trackers";
 import { AuthProvider, type ClientViewer } from "@/components/auth/AuthProvider";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -67,6 +68,7 @@ export default async function RootLayout({
             >
               {common("skipToContent")}
             </a>
+            <PageViewTracker />
             <Header unreadCount={unreadCount} />
             <main id="main" className="flex-1">
               {children}

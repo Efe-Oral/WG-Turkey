@@ -22,6 +22,7 @@ import {
 import { countProvinceListings, searchListings } from "@/lib/listings/search";
 import { absoluteUrl } from "@/lib/site";
 import { locative } from "@/lib/turkish";
+import { TrackOnce } from "@/components/analytics/Trackers";
 import { Breadcrumb } from "./Breadcrumb";
 import { ListingCard } from "./ListingCard";
 import { Pagination } from "./Pagination";
@@ -29,6 +30,7 @@ import { RememberCity } from "./RememberCity";
 import { ResultsSidebar } from "./ResultsSidebar";
 import { SearchControls } from "./SearchControls";
 import { SortSelect } from "./SortSelect";
+import { EmptyCityLink } from "./EmptyCityLink";
 import { RecordResults } from "./RecordResults";
 
 export type ResultsParams = {
@@ -178,6 +180,7 @@ export async function ResultsPage({ params, searchParams }: ResultsPageProps) {
   const provinceTotal = await countProvinceListings(province.id);
 
   const totalPages = Math.max(1, Math.ceil(result.total / PAGE_SIZE));
+  const searchKey = buildResultsHref(province.slug, { ...filters, page: 1 });
   const heading = buildHeading(
     locative(placeName),
     filters.categories,
@@ -207,6 +210,27 @@ export async function ResultsPage({ params, searchParams }: ResultsPageProps) {
   return (
     <div className="mx-auto max-w-page px-4 py-4 md:px-6">
       <RememberCity slug={province.slug} />
+      <TrackOnce
+        name="search"
+        eventKey={searchKey}
+        provinceId={province.id}
+        districtId={districtIds.length === 1 ? districtIds[0] : undefined}
+        props={{ result_count: result.total, filters: searchKey.slice(0, 180) }}
+      />
+      {result.total === 0 ? (
+        <TrackOnce
+          name="search_zero_results"
+          eventKey={searchKey}
+          provinceId={province.id}
+          districtId={districtIds.length === 1 ? districtIds[0] : undefined}
+          props={{
+            province: province.slug,
+            district: filters.districts[0] ?? "",
+            category: filters.categories[0] ?? "",
+            max_rent: filters.maxRent ?? "",
+          }}
+        />
+      ) : null}
       <RecordResults
         ids={result.listings.map((listing) => listing.public_number)}
         total={result.total}
@@ -270,12 +294,7 @@ export async function ResultsPage({ params, searchParams }: ResultsPageProps) {
           ) : provinceTotal === 0 ? (
             <div className="mt-8 flex flex-col items-center gap-4 text-center">
               <p>{t("emptyCity", { city: province.name })}</p>
-              <Link
-                href="/ilan-ver"
-                className="inline-flex h-11 items-center rounded-pill bg-cyan px-6 font-bold hover:no-underline hover:brightness-[.94]"
-              >
-                {t("postRoom")}
-              </Link>
+              <EmptyCityLink label={t("postRoom")} provinceId={province.id} />
             </div>
           ) : (
             <div className="mt-8 flex flex-col items-center gap-4 text-center">

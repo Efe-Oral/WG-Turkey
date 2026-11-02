@@ -33,6 +33,7 @@ import {
   EMPTY_FILTERS,
   type SearchFilters,
 } from "@/lib/listings/filters";
+import { track } from "@/lib/events/client";
 import { CityCombobox } from "./CityCombobox";
 
 const ANY = "any";
@@ -109,6 +110,7 @@ export function SearchControls({
   const update = (patch: Partial<SearchFilters>) => {
     const next = { ...draft, ...patch, page: 1 };
     setDraft(next);
+    track({ name: "filter_changed", props: { fields: Object.keys(patch).join(",") } });
     clearTimeout(timer.current);
     timer.current = setTimeout(() => navigate(next), DEBOUNCE_MS);
   };

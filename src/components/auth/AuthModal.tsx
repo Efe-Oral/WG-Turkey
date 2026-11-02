@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/Choice";
 import { Modal } from "@/components/ui/Modal";
 import { TextInput } from "@/components/ui/TextInput";
 import { completeOnboarding } from "@/lib/auth/actions";
+import { track } from "@/lib/events/client";
 import { createClient } from "@/lib/supabase/client";
 
 const RESEND_SECONDS = 60;
@@ -69,6 +70,7 @@ export function AuthModal({
   const sendCode = async () => {
     setBusy(true);
     setError(undefined);
+    track({ name: "signup_started" });
     const { error: sendError } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: true, emailRedirectTo: redirectTo() },
@@ -117,6 +119,7 @@ export function AuthModal({
 
     setBusy(false);
     if (profile?.first_name && profile.kvkk_consent_at) {
+      track({ name: "login" });
       setStep("email");
       setCode("");
       onDone();
@@ -135,6 +138,7 @@ export function AuthModal({
       setError(t("saveFailed"));
       return;
     }
+    track({ name: "signup_completed" });
     setStep("email");
     onDone();
   });

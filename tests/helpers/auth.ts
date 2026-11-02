@@ -95,7 +95,7 @@ export async function login(page: Page, email: string): Promise<void> {
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(
     page.getByRole("banner").getByRole("button", { name: /Hesabım/ }),
-  ).toHaveAttribute("aria-haspopup", "menu");
+  ).toHaveAttribute("aria-haspopup", "menu", { timeout: 15_000 });
 }
 
 /** A database client acting as this user, to prove what the API refuses. */

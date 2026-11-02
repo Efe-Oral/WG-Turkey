@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
+import { TrackOnce } from "@/components/analytics/Trackers";
 import { ContactCard } from "@/components/detail/ContactCard";
 import { DescriptionTabs } from "@/components/detail/DescriptionTabs";
 import { FeatureGrid } from "@/components/detail/FeatureGrid";
@@ -275,6 +276,12 @@ export default async function ListingPage({ params }: PageProps) {
         }}
       />
 
+      <TrackOnce
+        name="listing_view"
+        listingId={listing.id}
+        provinceId={listing.province_id}
+        districtId={listing.district_id}
+      />
       {isPending ? (
         <p role="status" className="mb-4 rounded-card bg-cyan px-4 py-3 font-medium">
           {preview("pendingBanner")}
@@ -305,6 +312,7 @@ export default async function ListingPage({ params }: PageProps) {
           <h1 className="text-h1 font-semibold">{listing.title}</h1>
 
           <Gallery
+            listingId={listing.id}
             title={listing.title}
             photos={photos.map((photo) => ({
               id: photo.id,

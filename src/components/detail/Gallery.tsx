@@ -5,13 +5,15 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Dialog } from "radix-ui";
 import { useState, type KeyboardEvent } from "react";
+import { track } from "@/lib/events/client";
 
 type GalleryProps = {
+  listingId: string;
   title: string;
   photos: { id: string; url: string }[];
 };
 
-export function Gallery({ title, photos }: GalleryProps) {
+export function Gallery({ listingId, title, photos }: GalleryProps) {
   const t = useTranslations("detail");
   const common = useTranslations("common");
   const [index, setIndex] = useState(0);
@@ -36,7 +38,10 @@ export function Gallery({ title, photos }: GalleryProps) {
       <button
         type="button"
         aria-label={t("openGallery")}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          track({ name: "gallery_open", listingId });
+        }}
         className="absolute inset-0 cursor-zoom-in"
       >
         <Image
